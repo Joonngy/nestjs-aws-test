@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getHealthCheck(): { data: string } {
+    return { data: `Health Check` };
+  }
+
+  getUser(): { data: string } {
+    return { data: `Hello from App Server ${process.env.ZONE}` };
   }
 }
