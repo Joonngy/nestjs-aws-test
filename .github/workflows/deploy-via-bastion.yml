@@ -1,0 +1,21 @@
+name: Deploy via Bastion Host
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to private App EC2s through Bastion
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.BASTION_HOST }}
+          username: ubuntu
+          key: ${{ secrets.BASTION_KEY }}
+          script: |
+            for ip in ${{ secrets.APP_PRIVATE_IPS }}; do
+              echo "Deploying to $ip ..."
+              ssh -o StrictHostKeyChecking=no -i ${{ secrets.ACCESS_KEY }} ubuntu@$ip "cd /home/ubuntu/app/nestjs-aws-test && ./dev-deploy.sh"
+            done
